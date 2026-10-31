@@ -1,167 +1,206 @@
 <!DOCTYPE html>
 <html lang="uk">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Оформлення бронювання — Система бронювання готелю</title>
-<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Оформлення бронювання — Система бронювання готелю</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-<a href="#main" class="skip-link">Перейти до вмісту</a>
-<header class="topbar">
-  <div class="brand">Готель <span>«Либідь»</span></div>
-  <nav>
-    <a href="client-search.html">Пошук номерів</a>
-    <a href="client-my-bookings.html">Мої бронювання</a>
-  </nav>
-  <div class="role-chip">Клієнт</div>
-</header>
+  <a href="#main" class="skip-link">Перейти до вмісту</a>
+  <header class="topbar">
+    <div class="brand">Готель <span>«Либідь»</span></div>
+    <nav>
+      <a href="client-search.html">Пошук номерів</a>
+      <a href="client-my-bookings.html">Мої бронювання</a>
+    </nav>
+    <div class="role-chip">Клієнт</div>
+  </header>
 
-<main id="main" class="page page--narrow">
-  <p class="eyebrow-free">Екрани 4–5 · US-02 · стани: форма → помилка (402/409) → успіх</p>
-  <h1 class="page-title">Оформлення бронювання</h1>
-  <div class="steps-indicator">
-    <span class="step current" id="step-1">1. Деталі та послуги</span>
-    <span class="step" id="step-2">2. Оплата</span>
-    <span class="step">3. Підтвердження</span>
-  </div>
-
-  <div id="alert-area"></div>
-
-  <div class="panel">
-    <h2 id="room-title" style="font-family:var(--serif);font-weight:400;font-size:1.2rem;margin-top:0;"></h2>
-    <p id="room-dates" style="color:var(--ink-soft);margin-top:-0.5rem;"></p>
-
-    <fieldset style="border:none;padding:0;margin:1.25rem 0 0;">
-      <legend style="font-size:0.88rem;color:var(--ink-soft);padding:0 0 0.4rem;">Додаткові послуги</legend>
-      <div class="checkbox-row"><input type="checkbox" id="svc1" data-id="1" data-price="450" data-name="Сніданок"><label class="cb-text" for="svc1">Сніданок (на весь період)</label><span class="cb-price">450 ₴</span></div>
-      <div class="checkbox-row"><input type="checkbox" id="svc2" data-id="2" data-price="600" data-name="Трансфер"><label class="cb-text" for="svc2">Трансфер аеропорт ↔ готель</label><span class="cb-price">600 ₴</span></div>
-      <div class="checkbox-row"><input type="checkbox" id="svc3" data-id="3" data-price="350" data-name="Ранній заїзд / пізній виїзд"><label class="cb-text" for="svc3">Ранній заїзд / пізній виїзд</label><span class="cb-price">350 ₴</span></div>
-    </fieldset>
-
-    <div class="summary-box" style="margin-top:1.25rem;" id="summary-box"></div>
-  </div>
-
-  <div class="panel">
-    <h2 style="font-family:var(--serif);font-weight:400;font-size:1.2rem;margin-top:0;">Оплата</h2>
-    <div class="field" id="card-field">
-      <label for="cardnum">Номер картки</label>
-      <input type="text" id="cardnum" placeholder="0000 0000 0000 0000" inputmode="numeric" autocomplete="off">
+  <main id="main" class="page page--narrow">
+    <p class="eyebrow-free">Екрани 4–5 · US-02 · стани: форма → помилка (402/409) → успіх</p>
+    <h1 class="page-title">Оформлення бронювання</h1>
+    <div class="steps-indicator">
+      <span class="step current" id="step-1">1. Деталі та послуги</span>
+      <span class="step" id="step-2">2. Оплата</span>
+      <span class="step">3. Підтвердження</span>
     </div>
-    <div class="field-row">
-      <div class="field"><label for="exp">Термін дії</label><input type="text" id="exp" placeholder="ММ/РР" autocomplete="off"></div>
-      <div class="field"><label for="cvv">CVV</label><input type="text" id="cvv" placeholder="123" autocomplete="off"></div>
+
+    <div id="alert-area"></div>
+
+    <div class="panel">
+      <h2 id="room-title" style="font-family:var(--serif);font-weight:400;font-size:1.2rem;margin-top:0;"></h2>
+      <p id="room-dates" style="color:var(--ink-soft);margin-top:-0.5rem;"></p>
+
+      <fieldset style="border:none;padding:0;margin:1.25rem 0 0;">
+        <legend style="font-size:0.88rem;color:var(--ink-soft);padding:0 0 0.4rem;">Додаткові послуги</legend>
+        <div class="checkbox-row"><input type="checkbox" id="svc1" data-id="1" data-price="450"
+            data-name="Сніданок"><label class="cb-text" for="svc1">Сніданок (на весь період)</label><span
+            class="cb-price">450 ₴</span></div>
+        <div class="checkbox-row"><input type="checkbox" id="svc2" data-id="2" data-price="600"
+            data-name="Трансфер"><label class="cb-text" for="svc2">Трансфер аеропорт ↔ готель</label><span
+            class="cb-price">600 ₴</span></div>
+        <div class="checkbox-row"><input type="checkbox" id="svc3" data-id="3" data-price="350"
+            data-name="Ранній заїзд / пізній виїзд"><label class="cb-text" for="svc3">Ранній заїзд / пізній
+            виїзд</label><span class="cb-price">350 ₴</span></div>
+      </fieldset>
+
+      <div class="summary-box" style="margin-top:1.25rem;" id="summary-box"></div>
     </div>
-    <p class="hint">Оплата обробляється мок-провайдером навчального прототипу; реальні дані карток не передаються на сервер.</p>
-    <div class="checkbox-row" style="border:none;padding-top:0;">
-      <input type="checkbox" id="simulate-decline">
-      <label class="cb-text" for="simulate-decline" style="font-size:0.85rem;color:var(--ink-soft);">Демонстрація: імітувати відмову платіжної системи (для перевірки екрана помилки)</label>
+
+    <div class="panel">
+      <h2 style="font-family:var(--serif);font-weight:400;font-size:1.2rem;margin-top:0;">Оплата</h2>
+      <div class="field" id="card-field">
+        <label for="cardnum">Номер картки</label>
+        <input type="text" id="cardnum" placeholder="0000 0000 0000 0000" inputmode="numeric" autocomplete="off">
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="exp">Термін дії</label><input type="text" id="exp" placeholder="ММ/РР"
+            autocomplete="off"></div>
+        <div class="field"><label for="cvv">CVV</label><input type="text" id="cvv" placeholder="123" autocomplete="off">
+        </div>
+      </div>
+      <p class="hint">Оплата обробляється мок-провайдером навчального прототипу; реальні дані карток не передаються на
+        сервер.</p>
+      <div class="checkbox-row" style="border:none;padding-top:0;">
+        <input type="checkbox" id="simulate-decline">
+        <label class="cb-text" for="simulate-decline" style="font-size:0.85rem;color:var(--ink-soft);">Демонстрація:
+          імітувати відмову платіжної системи (для перевірки екрана помилки)</label>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn-primary" id="pay-btn">Оплатити та утримати номер</button>
+        <a href="client-search.html" class="btn btn-ghost">Обрати інший номер</a>
+      </div>
     </div>
-    <div class="btn-row">
-      <button type="button" class="btn-primary" id="pay-btn">Оплатити та утримати номер</button>
-      <a href="client-search.html" class="btn btn-ghost">Обрати інший номер</a>
-    </div>
-  </div>
-</main>
+  </main>
 
-<script src="app.js"></script>
-<script>
-  requireRole("client");
-  const P = new URLSearchParams(location.search);
-  const roomId = Number(P.get("roomId")), number = P.get("number"), category = P.get("category");
-  const price = Number(P.get("price")), checkIn = P.get("checkIn"), checkOut = P.get("checkOut");
-  const nights = Math.round((new Date(checkOut) - new Date(checkIn)) / 86400000);
+  <script src="app.js"></script>
+  <script>
+    requireRole("client");
+    const P = new URLSearchParams(location.search);
+    const roomId = Number(P.get("roomId")), number = P.get("number"), category = P.get("category");
+    const price = Number(P.get("price")), checkIn = P.get("checkIn"), checkOut = P.get("checkOut");
+    const nights = Math.round((new Date(checkOut) - new Date(checkIn)) / 86400000);
 
-  document.getElementById("room-title").textContent = `Номер ${number} · ${CATEGORY_UA[category]}`;
-  document.getElementById("room-dates").textContent = `${fmtDate(checkIn)} – ${fmtDate(checkOut)} · ${nights} ноч.`;
+    document.getElementById("room-title").textContent = `Номер ${number} · ${CATEGORY_UA[category]}`;
+    document.getElementById("room-dates").textContent = `${fmtDate(checkIn)} – ${fmtDate(checkOut)} · ${nights} ноч.`;
 
-  const boxes = [...document.querySelectorAll("input[data-id]")];
-  function selected() { return boxes.filter((b) => b.checked); }
-  function renderSummary() {
-    const sel = selected();
-    const total = price * nights + sel.reduce((s, b) => s + Number(b.dataset.price), 0);
-    document.getElementById("summary-box").innerHTML =
-      `<div class="summary-line"><span>Номер × ${nights} ноч.</span><span>${fmtMoney(price * nights)}</span></div>` +
-      sel.map((b) => `<div class="summary-line"><span>${b.dataset.name}</span><span>${fmtMoney(b.dataset.price)}</span></div>`).join("") +
-      `<div class="summary-line total"><span>До оплати</span><span>${fmtMoney(total)}</span></div>`;
-    document.getElementById("pay-btn").textContent = `Оплатити ${fmtMoney(total)} та утримати номер`;
-    return total;
-  }
-  boxes.forEach((b) => b.addEventListener("change", renderSummary));
-  renderSummary();
-
-  function showBanner(title, text) {
-    document.getElementById("alert-area").innerHTML =
-      `<div class="banner banner-error" role="alert"><span class="banner-icon">!</span><div><strong>${escapeHtml(title)}</strong>${escapeHtml(text)}</div></div>`;
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-  function clearErrors() {
-    document.getElementById("alert-area").innerHTML = "";
-    const f = document.getElementById("card-field");
-    f.classList.remove("has-error");
-    f.querySelectorAll(".field-error").forEach((n) => n.remove());
-  }
-
-  // Чернетка повторно використовується при повторній спробі оплати з тими самими послугами
-  // (ідемпотентність за draftId; введені дані не втрачаються після помилки).
-  let draft = null, draftKey = null;
-
-  document.getElementById("pay-btn").addEventListener("click", async () => {
-    clearErrors();
-    const digits = document.getElementById("cardnum").value.replace(/\s+/g, "");
-    if (!/^\d{16}$/.test(digits)) {  // перевірка формату з таблиці 2.8
-      const f = document.getElementById("card-field");
-      f.classList.add("has-error");
-      f.insertAdjacentHTML("beforeend", '<div class="field-error" role="alert">Введіть 16 цифр номера картки.</div>');
-      return;
+    const boxes = [...document.querySelectorAll("input[data-id]")];
+    function selected() { return boxes.filter((b) => b.checked); }
+    function renderSummary() {
+      const sel = selected();
+      const total = price * nights + sel.reduce((s, b) => s + Number(b.dataset.price), 0);
+      document.getElementById("summary-box").innerHTML =
+        `<div class="summary-line"><span>Номер × ${nights} ноч.</span><span>${fmtMoney(price * nights)}</span></div>` +
+        sel.map((b) => `<div class="summary-line"><span>${b.dataset.name}</span><span>${fmtMoney(b.dataset.price)}</span></div>`).join("") +
+        `<div class="summary-line total"><span>До оплати</span><span>${fmtMoney(total)}</span></div>`;
+      document.getElementById("pay-btn").textContent = `Оплатити ${fmtMoney(total)} та утримати номер`;
+      return total;
     }
-    const btn = document.getElementById("pay-btn");
-    btn.disabled = true; btn.textContent = "Обробка…";
-    document.getElementById("step-1").classList.remove("current");
-    document.getElementById("step-2").classList.add("current");
+    boxes.forEach((b) => b.addEventListener("change", renderSummary));
+    renderSummary();
 
-    const serviceIds = selected().map((b) => Number(b.dataset.id));
-    const key = serviceIds.join(",");
-    if (!draft || draftKey !== key) {
-      const d = await api("/bookings/draft", {
-        method: "POST",
-        body: JSON.stringify({ roomId, checkInDate: checkIn, checkOutDate: checkOut, serviceIds }),
-      });
-      if (!d.ok) {
-        btn.disabled = false; renderSummary();
-        showBanner("Бронювання неможливе", d.data?.message || "Не вдалося створити чернетку бронювання.");
+    function showBanner(title, text) {
+      document.getElementById("alert-area").innerHTML =
+        `<div class="banner banner-error" role="alert"><span class="banner-icon">!</span><div><strong>${escapeHtml(title)}</strong>${escapeHtml(text)}</div></div>`;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    function clearErrors() {
+      document.getElementById("alert-area").innerHTML = "";
+      const f = document.getElementById("card-field");
+      f.classList.remove("has-error");
+      f.querySelectorAll(".field-error").forEach((n) => n.remove());
+    }
+
+    // Автоформатування полів картки: номер — групами по 4 цифри, термін дії — ММ/РР, CVV — 3 цифри.
+    const cardInput = document.getElementById("cardnum");
+    const expInput = document.getElementById("exp");
+    const cvvInput = document.getElementById("cvv");
+    cardInput.addEventListener("input", () => {
+      const digits = cardInput.value.replace(/\D/g, "").slice(0, 16);   // лише цифри, максимум 16
+      cardInput.value = digits.replace(/(\d{4})(?=\d)/g, "$1 ");         // пробіл після кожних 4 цифр
+    });
+    expInput.addEventListener("input", (e) => {
+      const digits = expInput.value.replace(/\D/g, "").slice(0, 4);      // лише цифри, максимум 4
+      const deleting = e.inputType && e.inputType.startsWith("delete");  // при видаленні слеш не додаємо наперед
+      if (digits.length > 2 || (digits.length === 2 && !deleting)) {
+        expInput.value = digits.slice(0, 2) + "/" + digits.slice(2);     // після двох цифр одразу ставимо «/»
+      } else {
+        expInput.value = digits;
+      }
+    });
+    cvvInput.addEventListener("input", () => {
+      cvvInput.value = cvvInput.value.replace(/\D/g, "").slice(0, 3);    // CVV: лише цифри, максимум 3
+    });
+    cardInput.setAttribute("maxlength", "19");                           // 16 цифр + 3 пробіли
+    expInput.setAttribute("maxlength", "5");                             // ММ/РР
+    cvvInput.setAttribute("maxlength", "3");
+    cvvInput.setAttribute("inputmode", "numeric");
+    expInput.setAttribute("inputmode", "numeric");
+
+    // Чернетка повторно використовується при повторній спробі оплати з тими самими послугами
+    // (ідемпотентність за draftId; введені дані не втрачаються після помилки).
+    let draft = null, draftKey = null;
+
+    document.getElementById("pay-btn").addEventListener("click", async () => {
+      clearErrors();
+      const digits = document.getElementById("cardnum").value.replace(/\s+/g, "");
+      if (!/^\d{16}$/.test(digits)) {  // перевірка формату з таблиці 2.8
+        const f = document.getElementById("card-field");
+        f.classList.add("has-error");
+        f.insertAdjacentHTML("beforeend", '<div class="field-error" role="alert">Введіть 16 цифр номера картки.</div>');
         return;
       }
-      draft = d.data; draftKey = key;
-    }
+      const btn = document.getElementById("pay-btn");
+      btn.disabled = true; btn.textContent = "Обробка…";
+      document.getElementById("step-1").classList.remove("current");
+      document.getElementById("step-2").classList.add("current");
 
-    const pay = await api("/payments", {
-      method: "POST",
-      body: JSON.stringify({
-        draftId: draft.draftId, amount: draft.totalPrice, currency: draft.currency,
-        simulate: document.getElementById("simulate-decline").checked ? "decline" : undefined,
-      }),
+      const serviceIds = selected().map((b) => Number(b.dataset.id));
+      const key = serviceIds.join(",");
+      if (!draft || draftKey !== key) {
+        const d = await api("/bookings/draft", {
+          method: "POST",
+          body: JSON.stringify({ roomId, checkInDate: checkIn, checkOutDate: checkOut, serviceIds }),
+        });
+        if (!d.ok) {
+          btn.disabled = false; renderSummary();
+          showBanner("Бронювання неможливе", d.data?.message || "Не вдалося створити чернетку бронювання.");
+          return;
+        }
+        draft = d.data; draftKey = key;
+      }
+
+      const pay = await api("/payments", {
+        method: "POST",
+        body: JSON.stringify({
+          draftId: draft.draftId, amount: draft.totalPrice, currency: draft.currency,
+          simulate: document.getElementById("simulate-decline").checked ? "decline" : undefined,
+        }),
+      });
+      btn.disabled = false; renderSummary();
+
+      if (pay.status === 402) {          // екран 5: оплату відхилено
+        showBanner("Оплату не проведено",
+          "Платіжна система відхилила операцію. Бронювання не створено, кошти не списано, номер залишається вільним.");
+        const f = document.getElementById("card-field");
+        f.classList.add("has-error");
+        f.insertAdjacentHTML("beforeend", '<div class="field-error">Платіж відхилено. Перевірте дані картки або спробуйте іншу.</div>');
+        return;
+      }
+      if (!pay.ok) {                      // 409 resource_unavailable та інші
+        draft = null;
+        showBanner("Оплату не проведено", pay.data?.message || "Сталася помилка.");
+        return;
+      }
+      // екран 6: успіх
+      const b = pay.data;
+      location.href = `client-booking-success.html?id=${b.id}&number=${encodeURIComponent(number)}&category=${category}` +
+        `&checkIn=${b.checkInDate}&checkOut=${b.checkOutDate}&total=${b.totalPrice}`;
     });
-    btn.disabled = false; renderSummary();
-
-    if (pay.status === 402) {          // екран 5: оплату відхилено
-      showBanner("Оплату не проведено",
-        "Платіжна система відхилила операцію. Бронювання не створено, кошти не списано, номер залишається вільним.");
-      const f = document.getElementById("card-field");
-      f.classList.add("has-error");
-      f.insertAdjacentHTML("beforeend", '<div class="field-error">Платіж відхилено. Перевірте дані картки або спробуйте іншу.</div>');
-      return;
-    }
-    if (!pay.ok) {                      // 409 resource_unavailable та інші
-      draft = null;
-      showBanner("Оплату не проведено", pay.data?.message || "Сталася помилка.");
-      return;
-    }
-    // екран 6: успіх
-    const b = pay.data;
-    location.href = `client-booking-success.html?id=${b.id}&number=${encodeURIComponent(number)}&category=${category}` +
-      `&checkIn=${b.checkInDate}&checkOut=${b.checkOutDate}&total=${b.totalPrice}`;
-  });
-</script>
+  </script>
 </body>
+
 </html>
