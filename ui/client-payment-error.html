@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Помилка оплати — Система бронювання готелю</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Перейти до вмісту</a>
+<header class="topbar">
+  <div class="brand">Готель <span>«Либідь»</span></div>
+  <nav>
+    <a href="client-search.html">Пошук номерів</a>
+    <a href="client-my-bookings.html">Мої бронювання</a>
+  </nav>
+  <div class="role-chip">Клієнт</div>
+</header>
+
+<main id="main" class="page page--narrow">
+  <p class="eyebrow-free">Екран 5 · US-02 · стан: помилка (402 payment_declined)</p>
+  <h1 class="page-title">Оформлення бронювання</h1>
+  <div class="steps-indicator">
+    <span class="step">1. Деталі та послуги</span>
+    <span class="step current">2. Оплата</span>
+    <span class="step">3. Підтвердження</span>
+  </div>
+
+  <div class="panel">
+    <div class="banner banner-error" role="alert">
+      <span class="banner-icon">!</span>
+      <div>
+        <strong>Оплату не проведено</strong>
+        Платіжна система відхилила операцію. Бронювання не створено, кошти не списано, номер 204 лишається вільним для інших клієнтів.
+      </div>
+    </div>
+
+    <h2 style="font-family:var(--serif);font-weight:400;font-size:1.2rem;margin-top:0;">Номер 204 · Комфорт</h2>
+    <p style="color:var(--ink-soft);margin-top:-0.5rem;">10–13 листопада 2026 · До оплати: 5 150 ₴</p>
+
+    <div class="field has-error">
+      <label for="cardnum2">Номер картки</label>
+      <input type="text" id="cardnum2" value="0000 0000 0000 0000">
+      <div class="field-error">Платіж відхилено банком-емітентом. Перевірте дані картки або спробуйте іншу.</div>
+    </div>
+
+    <div class="btn-row">
+      <button type="button" class="btn-primary">Спробувати оплатити ще раз</button>
+      <a href="client-search-results.html" class="btn btn-ghost">Обрати інший номер</a>
+    </div>
+  </div>
+</main>
+</body>
+</html>

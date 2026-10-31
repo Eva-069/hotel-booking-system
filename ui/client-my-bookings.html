@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Мої бронювання — Система бронювання готелю</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Перейти до вмісту</a>
+<header class="topbar">
+  <div class="brand">Готель <span>«Либідь»</span></div>
+  <nav>
+    <a href="client-search.html">Пошук номерів</a>
+    <a href="client-my-bookings.html" class="active">Мої бронювання</a>
+  </nav>
+  <div class="role-chip">Клієнт</div>
+</header>
+
+<main id="main" class="page page--narrow">
+  <p class="eyebrow-free">Екрани 7–8 · US-03 / US-04 · стани: порожньо / успіх</p>
+  <h1 class="page-title">Мої бронювання</h1>
+  <div id="alert-area"></div>
+  <div id="list"></div>
+</main>
+
+<script src="app.js"></script>
+<script>
+  requireRole("client");
+  const CANCELLABLE = ["paid", "confirmed"];
+
+  async function load() {
+    const res = await api("/bookings/mine");
+    const list = document.getElementById("list");
+    if (!res.ok) { list.innerHTML = ""; return; }
+    if (res.data.length === 0) {     // екран 7: порожній стан
+      list.innerHTML = `<div class="panel"><div class="empty-state"><div class="empty-icon">🗝</div>
+        <h2>Бронювань поки немає</h2><p>Перевірте доступні номери на потрібні дати й оформіть перше бронювання.</p>
+        <div class="btn-row" style="justify-content:center;"><a href="client-search.html" class="btn btn-primary">Перевірити доступність номерів</a></div></div></div>`;
+      return;
+    }
+    list.innerHTML = res.data.map((b) => `   <!-- екран 8: список -->
+      <div class="panel">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <h2 style="font-family:var(--serif);font-weight:400;font-size:1.15rem;margin:0 0 0.2rem;">Бронювання № ${b.id}</h2>
+            <p style="color:var(--ink-soft);margin:0;">${fmtDate(b.checkInDate)} – ${fmtDate(b.checkOutDate)} · ${fmtMoney(b.totalPrice)}</p>
+          </div>
+          ${statusBadge(b.status)}
+        </div>
+        ${CANCELLABLE.includes(b.status) ? `<div class="btn-row"><button type="button" class="btn-danger btn-sm" data-cancel="${b.id}">Скасувати бронювання</button></div>` : ""}
+      </div>`).join("");
+
+    list.querySelectorAll("[data-cancel]").forEach((btn) => btn.addEventListener("click", async () => {
+      if (!confirm("Скасувати це бронювання?")) return;
+      const r = await api(`/bookings/${btn.dataset.cancel}/cancel`, { method: "POST" });
+      if (!r.ok) {
+        document.getElementById("alert-area").innerHTML =
+          `<div class="banner banner-error" role="alert"><span class="banner-icon">!</span><div><strong>Дію не виконано</strong>${escapeHtml(r.data?.message || "")}</div></div>`;
+      }
+      load();
+    }));
+  }
+  load();
+</script>
+</body>
+</html>

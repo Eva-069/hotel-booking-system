@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Бронювання — панель адміністратора</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Перейти до вмісту</a>
+<header class="topbar">
+  <div class="brand">Готель <span>«Либідь»</span></div>
+  <nav><a href="admin-dashboard.html" class="active">Бронювання</a></nav>
+  <div class="role-chip">Адміністратор</div>
+</header>
+
+<main id="main" class="page">
+  <p class="eyebrow-free">Екран 9 · US-05 / US-06 / US-07 · стани: успіх + помилка 409</p>
+  <h1 class="page-title">Бронювання</h1>
+  <p class="page-sub">Підтвердження заявок, заселення та виїзд клієнтів.</p>
+  <div id="alert-area"></div>
+  <div class="panel" style="padding:0;overflow-x:auto;" id="table-panel"></div>
+</main>
+
+<script src="app.js"></script>
+<script>
+  requireRole("admin");
+
+  // Доступні дії залежать від статусу (відповідає діаграмі станів, рис. 2.6)
+  function actions(b) {
+    switch (b.status) {
+      case "paid":
+        return `<button class="btn-primary btn-sm" data-act="confirm" data-id="${b.id}">Підтвердити</button>
+                <button class="btn-secondary btn-sm" data-act="reject" data-id="${b.id}">Відхилити</button>`;
+      case "confirmed":
+        return `<button class="btn-primary btn-sm" data-act="check-in" data-id="${b.id}">Заселити</button>`;
+      case "checked_in":
+        return `<button class="btn-primary btn-sm" data-act="check-out" data-id="${b.id}">Оформити виїзд</button>`;
+      default:
+        return `<button class="btn-secondary btn-sm" disabled>Недоступно</button>`;
+    }
+  }
+
+  async function load() {
+    const res = await api("/bookings");
+    const panel = document.getElementById("table-panel");
+    if (!res.ok) { panel.innerHTML = `<div class="empty-state"><p>Не вдалося завантажити бронювання.</p></div>`; return; }
+    if (res.data.length === 0) {
+      panel.innerHTML = `<div class="empty-state"><div class="empty-icon">🗝</div><h2>Бронювань ще немає</h2><p>Нові заявки з'являться тут після оплати клієнтами.</p></div>`;
+      return;
+    }
+    panel.innerHTML = `<table class="data"><thead><tr>
+      <th>№</th><th>Номер</th><th>Клієнт</th><th>Дати</th><th>Статус</th><th>Дія</th></tr></thead><tbody>` +
+      res.data.map((b) => `<tr>
+        <td class="mono">${b.id}</td>
+        <td>${escapeHtml(b.roomNumber)} · ${CATEGORY_UA[b.roomCategory]}</td>
+        <td>${escapeHtml(b.clientName)}</td>
+        <td>${fmtDate(b.checkInDate).slice(0,5)}–${fmtDate(b.checkOutDate).slice(0,5)}</td>
+        <td>${statusBadge(b.status)}</td>
+        <td class="row-actions">${actions(b)}</td></tr>`).join("") + `</tbody></table>`;
+
+    panel.querySelectorAll("[data-act]").forEach((btn) => btn.addEventListener("click", async () => {
+      const r = await api(`/bookings/${btn.dataset.id}/${btn.dataset.act}`, { method: "POST", body: JSON.stringify({}) });
+      document.getElementById("alert-area").innerHTML = r.ok ? "" :
+        `<div class="banner banner-error" role="alert" style="margin-bottom:1.5rem;"><span class="banner-icon">!</span>
+         <div><strong>Дію не виконано (${r.status} ${escapeHtml(r.data?.code || "")})</strong>Бронювання № ${btn.dataset.id}: ${escapeHtml(r.data?.message || "")}</div></div>`;
+      load();
+    }));
+  }
+  load();
+</script>
+</body>
+</html>

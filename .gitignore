@@ -1,0 +1,6 @@
+node_modules/
+data/hotel.db
+data/hotel.db-shm
+data/hotel.db-wal
+*.log
+.env

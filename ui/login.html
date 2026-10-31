@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Вхід — Система бронювання готелю</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Перейти до вмісту</a>
+<header class="topbar">
+  <div class="brand">Готель <span>«Либідь»</span></div>
+  <div class="role-chip">Демонстраційний вхід</div>
+</header>
+
+<main id="main" class="page page--narrow">
+  <h1 class="page-title">Вхід до системи</h1>
+  <p class="page-sub">Навчальний прототип. Оберіть роль — дані для входу підставляться автоматично.</p>
+
+  <form class="panel" id="login-form">
+    <div id="login-error"></div>
+    <div class="field">
+      <label for="role-pick">Роль</label>
+      <select id="role-pick">
+        <option value="client">Клієнт</option>
+        <option value="admin">Адміністратор</option>
+        <option value="cleaning_staff">Персонал прибирання</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="email">Email</label>
+      <input type="email" id="email" required>
+    </div>
+    <div class="field">
+      <label for="password">Пароль</label>
+      <input type="text" id="password" required>
+      <div class="hint">Демо-пароль показано відкрито лише для навчального прототипу.</div>
+    </div>
+    <div class="btn-row"><button type="submit" class="btn-primary">Увійти</button></div>
+  </form>
+</main>
+
+<script src="app.js"></script>
+<script>
+  const DEMO = {
+    client: ["client@example.com", "client123", "client-search.html"],
+    admin: ["admin@example.com", "admin123", "admin-dashboard.html"],
+    cleaning_staff: ["cleaning@example.com", "clean123", "cleaning-queue.html"],
+  };
+  const pick = document.getElementById("role-pick");
+  function fill() {
+    const [e, p] = DEMO[pick.value];
+    document.getElementById("email").value = e;
+    document.getElementById("password").value = p;
+  }
+  pick.addEventListener("change", fill);
+  fill();
+
+  document.getElementById("login-form").addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    const res = await api("/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ email: email.value, password: password.value }),
+    });
+    if (!res.ok) {
+      document.getElementById("login-error").innerHTML =
+        `<div class="banner banner-error" role="alert"><span class="banner-icon">!</span><div>${escapeHtml(res.data?.message || "Помилка входу")}</div></div>`;
+      return;
+    }
+    setSession(res.data);
+    location.href = DEMO[res.data.role][2];
+  });
+</script>
+</body>
+</html>

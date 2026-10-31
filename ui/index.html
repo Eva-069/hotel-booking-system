@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Карта екранів — Система бронювання готелю</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .group { margin-bottom: 2.25rem; }
+  .group h2 { font-family: var(--serif); font-weight: 400; color: var(--pine); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+  .screen-list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 0.75rem; }
+  .screen-list a { display: block; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-m); padding: 1rem 1.1rem; text-decoration: none; color: var(--ink); }
+  .screen-list a:hover { border-color: var(--brass); }
+  .screen-list .n { color: var(--ink-soft); font-size: 0.8rem; }
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Перейти до вмісту</a>
+<header class="topbar">
+  <div class="brand">Готель <span>«Либідь»</span></div>
+  <div class="role-chip"><a href="login.html" style="color:#d8c49a">Вхід до живого прототипу →</a></div>
+</header>
+<main id="main" class="page">
+  <h1 class="page-title">Інформаційна архітектура — усі екрани</h1>
+  <p class="page-sub">11 екранів, що покривають усі функціональні вимоги розділу 1 (US-01 — US-08) для трьох ролей. Екрани 1, 3–4, 6, 8–10 підключено до API (потрібен вхід); екрани 2, 5, 7, 11 — статичні довідники станів.</p>
+
+  <div class="group">
+    <h2>Клієнт</h2>
+    <ul class="screen-list">
+      <li><a href="client-search.html"><span class="n">Екран 1 · форма</span><br>Пошук номерів</a></li>
+      <li><a href="client-search-loading.html"><span class="n">Екран 2 · завантаження</span><br>Пошук — обробка</a></li>
+      <li><a href="client-search-results.html"><span class="n">Екран 3 · успіх</span><br>Результати пошуку</a></li>
+      <li><a href="client-booking-payment.html"><span class="n">Екран 4 · форма</span><br>Бронювання й оплата</a></li>
+      <li><a href="client-payment-error.html"><span class="n">Екран 5 · помилка</span><br>Оплату відхилено</a></li>
+      <li><a href="client-booking-success.html"><span class="n">Екран 6 · успіх</span><br>Бронювання підтверджено</a></li>
+      <li><a href="client-my-bookings-empty.html"><span class="n">Екран 7 · порожньо</span><br>Мої бронювання (немає)</a></li>
+      <li><a href="client-my-bookings.html"><span class="n">Екран 8 · успіх</span><br>Мої бронювання (є дані)</a></li>
+    </ul>
+  </div>
+
+  <div class="group">
+    <h2>Адміністратор</h2>
+    <ul class="screen-list">
+      <li><a href="admin-dashboard.html"><span class="n">Екран 9 · успіх + помилка</span><br>Керування бронюваннями</a></li>
+    </ul>
+  </div>
+
+  <div class="group">
+    <h2>Персонал прибирання</h2>
+    <ul class="screen-list">
+      <li><a href="cleaning-queue.html"><span class="n">Екран 10 · успіх</span><br>Черга прибирання (є дані)</a></li>
+      <li><a href="cleaning-queue-empty.html"><span class="n">Екран 11 · порожньо</span><br>Черга прибирання (порожньо)</a></li>
+    </ul>
+  </div>
+</main>
+</body>
+</html>

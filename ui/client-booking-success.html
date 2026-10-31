@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Бронювання підтверджено — Система бронювання готелю</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Перейти до вмісту</a>
+<header class="topbar">
+  <div class="brand">Готель <span>«Либідь»</span></div>
+  <nav>
+    <a href="client-search.html">Пошук номерів</a>
+    <a href="client-my-bookings.html" class="active">Мої бронювання</a>
+  </nav>
+  <div class="role-chip">Клієнт</div>
+</header>
+
+<main id="main" class="page page--narrow">
+  <p class="eyebrow-free">Екран 6 · US-02 · стан: успіх</p>
+  <h1 class="page-title">Оформлення бронювання</h1>
+  <div class="steps-indicator">
+    <span class="step">1. Деталі та послуги</span>
+    <span class="step">2. Оплата</span>
+    <span class="step current">3. Підтвердження</span>
+  </div>
+
+  <div class="panel">
+    <div class="banner banner-success" role="status">
+      <span class="banner-icon">✓</span>
+      <div>
+        <strong>Оплату проведено, номер за вами утримано</strong>
+        <span id="msg"></span>
+      </div>
+    </div>
+    <div class="summary-box" id="details"></div>
+    <div class="btn-row"><a href="client-my-bookings.html" class="btn btn-primary">Переглянути мої бронювання</a></div>
+  </div>
+</main>
+
+<script src="app.js"></script>
+<script>
+  requireRole("client");
+  const P = new URLSearchParams(location.search);
+  document.getElementById("msg").textContent =
+    `Бронювання № ${P.get("id")} очікує підтвердження адміністратора.`;
+  document.getElementById("details").innerHTML =
+    `<div class="summary-line"><span>Номер</span><span>${escapeHtml(P.get("number"))} · ${CATEGORY_UA[P.get("category")] || ""}</span></div>
+     <div class="summary-line"><span>Дати</span><span>${fmtDate(P.get("checkIn"))} – ${fmtDate(P.get("checkOut"))}</span></div>
+     <div class="summary-line"><span>Статус</span><span><span class="badge badge-held">Заброньовано-оплачено</span></span></div>
+     <div class="summary-line total"><span>Сплачено</span><span>${fmtMoney(P.get("total"))}</span></div>`;
+</script>
+</body>
+</html>

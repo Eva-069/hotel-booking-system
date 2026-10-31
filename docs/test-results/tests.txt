@@ -1,0 +1,49 @@
+✔ TEST-08 · US-01 (+): доступність за датами та категорією (282.955008ms)
+✔ TEST-09 · US-01/US-02 (−): порожні, некоректні та зловмисні значення → 422 (T-03) (54.957989ms)
+✔ TEST-10 · US-02 (+): чернетка → оплата → бронювання створено, номер утримано (178.13325ms)
+✔ TEST-11 · US-02 (−): оплату відхилено → 402, бронювання не створено; повтор успішний (338.234267ms)
+✔ TEST-12 · US-02, повторний запит (T-05): ідемпотентність оплати за draftId (330.1835ms)
+✔ TEST-13 · US-02 (−): недоступний номер, неіснуючі номер/послуга (345.122676ms)
+✔ TEST-14 · US-03: «мої бронювання» — лише власні, без чернеток (499.874785ms)
+✔ TEST-15 · US-04: скасування звільняє номер; чужий запис, повтор і пізній стан — відмова (344.162408ms)
+✔ TEST-16 · US-05: підтвердження й відхилення заявки адміністратором (491.492334ms)
+✔ TEST-17 · US-06: заселення фіксує статус, час і стан номера (178.523027ms)
+✔ TEST-18 · US-07: виїзд переводить номер у «потребує прибирання» (177.498688ms)
+✔ TEST-19 · US-08, NFR-02: черга прибирання без персональних даних; прибирання зменшує чергу (14.320376ms)
+✔ TEST-22 · межі дат: суміжні періоди дозволені, перетин на одну ніч — ні (338.823651ms)
+✔ TEST-25 · US-05…US-07: перелік бронювань адміністратора (з даними, без чернеток, без зайвих персональних даних) (330.905869ms)
+✔ TEST-26 · T-03: некоректний JSON у тілі запиту → 422 з єдиною структурою помилки, а не 500 (13.230236ms)
+Error: SQLITE_CONSTRAINT: таємні подробиці /srv/app/server/db.js
+    at svc.createDraft (/home/claude/hotel-booking-system/tests/functional.test.js:324:35)
+    at /home/claude/hotel-booking-system/server/routes/bookings.js:23:34
+    at Layer.handle [as handle_request] (/home/claude/hotel-booking-system/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/claude/hotel-booking-system/node_modules/express/lib/router/route.js:149:13)
+    at /home/claude/hotel-booking-system/server/middleware/auth.js:35:5
+    at Layer.handle [as handle_request] (/home/claude/hotel-booking-system/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/claude/hotel-booking-system/node_modules/express/lib/router/route.js:149:13)
+    at requireAuth (/home/claude/hotel-booking-system/server/middleware/auth.js:20:5)
+    at Layer.handle [as handle_request] (/home/claude/hotel-booking-system/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/claude/hotel-booking-system/node_modules/express/lib/router/route.js:149:13)
+✔ TEST-27 · повідомлення про помилки зрозумілі користувачеві (українською) і не розкривають внутрішніх деталей (347.575372ms)
+✔ TEST-01 · INV-01: дата виїзду пізніша за дату заїзду (API + обмеження БД) (97.446391ms)
+✔ TEST-02 · INV-02: паралельні оплати одного номера — один успіх, решта 409 (381.465993ms)
+✔ TEST-03 · INV-03: статус held лише після успішного платежу (322.415817ms)
+✔ TEST-04 · INV-04: скасоване або відхилене бронювання не можна заселити (332.863891ms)
+✔ TEST-05 · INV-05: total_price = ночі × ціна + послуги; неузгоджена сума відхиляється (165.950456ms)
+✔ TEST-06 · INV-06: заселення лише з підтвердженого бронювання (173.822518ms)
+✔ TEST-07 · INV-07: «прибрано» лише для номера зі статусом needs_cleaning (31.653877ms)
+✔ TEST-20 · NFR-06, T-04: матриця ролей із x-roles контракту застосовується до кожної операції (247.308366ms)
+✔ TEST-21 · NFR-07: кожна зміна стану фіксується в журналі дій без персональних даних (490.313371ms)
+✔ TEST-23 · NFR-04: час відповіді GET /rooms/availability (24 номери, 200 бронювань) (783.514128ms)
+ℹ NFR-04 середовище: Node v22.23.4, linux x64, CPU Intel(R) Xeon(R) Processor @ 2.80GHz ×2; SQLite-файл, localhost, послідовні запити
+ℹ NFR-04 дані: 24 номери, 200 бронювань; запитів: 300
+ℹ NFR-04 результат, мс: медіана=2.10; p95=5.04; максимум=19.71
+✔ TEST-24 · NFR-05: контракт OpenAPI валідний і всі операції реалізовано з документованими кодами (208.54362ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8256.165926

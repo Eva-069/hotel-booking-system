@@ -1,0 +1,244 @@
+/* ============================================================
+   Design tokens — система бронювання готелю
+   Палітра навіяна інтер'єром невеликого готелю: глибокий сосновий
+   (навігація/акценти персоналу), тепла брунатна бронза (ключова дія),
+   нейтральний камінний фон. Клієнтські екрани — серифний заголовок,
+   більше повітря; екрани персоналу — щільні, табличні, без серифа.
+   ============================================================ */
+
+:root {
+  --ink: #202a24;
+  --ink-soft: #52604f;
+  --pine: #16302b;
+  --pine-light: #234740;
+  --stone-bg: #f1efe7;
+  --surface: #ffffff;
+  --border: #dedacd;
+  --border-soft: #e9e6db;
+  --brass: #a6793e;
+  --brass-dark: #8a632f;
+  --brass-tint: #f3e6d3;
+  --success: #3e6b4f;
+  --success-tint: #e4efe6;
+  --error: #9b3b33;
+  --error-tint: #f6e6e3;
+  --info: #3c5f7a;
+  --info-tint: #e4edf3;
+  --warn: #8a6d1d;
+  --warn-tint: #f3ecd4;
+  --radius-s: 4px;
+  --radius-m: 8px;
+  --shadow-1: 0 1px 2px rgba(32, 42, 36, 0.06);
+  --shadow-2: 0 4px 16px rgba(32, 42, 36, 0.10);
+  --serif: Georgia, 'Iowan Old Style', 'Palatino Linotype', serif;
+  --sans: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--stone-bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.5;
+}
+img, svg { max-width: 100%; }
+
+a { color: var(--brass-dark); }
+
+/* ---------- App shell ---------- */
+.topbar {
+  background: var(--pine);
+  color: #f1efe7;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1.75rem;
+}
+.topbar .brand {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  letter-spacing: 0.01em;
+}
+.topbar .brand span { color: #d8c49a; }
+.topbar nav { display: flex; gap: 1.5rem; font-size: 0.92rem; }
+.topbar nav a { color: #d7ddd4; text-decoration: none; }
+.topbar nav a.active { color: #ffffff; font-weight: 600; border-bottom: 2px solid var(--brass); padding-bottom: 2px; }
+.topbar .role-chip {
+  background: rgba(255,255,255,0.12);
+  border-radius: 999px;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.8rem;
+}
+
+.page {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 2.25rem 1.75rem 3rem;
+}
+.page--narrow { max-width: 560px; }
+
+.eyebrow-free { color: var(--ink-soft); font-size: 0.95rem; margin: 0 0 0.3rem; }
+h1.page-title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 2rem;
+  margin: 0 0 0.3rem;
+  color: var(--pine);
+}
+.page-sub { color: var(--ink-soft); margin: 0 0 1.75rem; max-width: 60ch; }
+
+/* ---------- Panels & cards ---------- */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-1);
+}
+.panel + .panel { margin-top: 1.25rem; }
+
+/* ---------- Forms ---------- */
+.field { margin-bottom: 1.15rem; }
+.field label {
+  display: block;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  margin-bottom: 0.35rem;
+}
+.field input[type=text],
+.field input[type=date],
+.field input[type=number],
+.field input[type=email],
+.field select {
+  width: 100%;
+  padding: 0.62rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-s);
+  font-size: 0.98rem;
+  font-family: var(--sans);
+  background: var(--surface);
+  color: var(--ink);
+}
+.field input:focus, .field select:focus, button:focus-visible, a.btn:focus-visible {
+  outline: 3px solid #bcd3e6;
+  outline-offset: 1px;
+  border-color: var(--info);
+}
+.field .hint { font-size: 0.8rem; color: var(--ink-soft); margin-top: 0.3rem; }
+.field .field-error { font-size: 0.82rem; color: var(--error); margin-top: 0.35rem; }
+.field.has-error input { border-color: var(--error); background: #fffaf9; }
+.field-row { display: flex; gap: 1rem; }
+.field-row .field { flex: 1; }
+
+.checkbox-row { display: flex; align-items: flex-start; gap: 0.6rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border-soft); }
+.checkbox-row:last-child { border-bottom: none; }
+.checkbox-row input { margin-top: 0.3rem; }
+.checkbox-row .cb-text { flex: 1; }
+.checkbox-row .cb-price { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+
+/* ---------- Buttons ---------- */
+button, a.btn {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  padding: 0.68rem 1.4rem;
+  border-radius: var(--radius-s);
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+/* DEF-05: білий текст на --brass мав контраст 3.87:1 (< 4.5:1, WCAG AA); темніший фон дає 5.38:1 */
+.btn-primary { background: var(--brass-dark); color: #fff; }
+.btn-primary:hover { background: #6f4f25; }
+.btn-primary[disabled] { background: #c9b08a; cursor: not-allowed; }
+.btn-secondary { background: var(--surface); color: var(--pine); border-color: var(--border); }
+.btn-secondary:hover { background: var(--stone-bg); }
+.btn-danger { background: var(--surface); color: var(--error); border-color: #e3bdb6; }
+.btn-danger:hover { background: var(--error-tint); }
+.btn-ghost { background: transparent; color: var(--ink-soft); border-color: transparent; padding: 0.5rem 0.75rem; }
+.btn-row { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
+.btn-sm { padding: 0.4rem 0.85rem; font-size: 0.85rem; }
+
+/* ---------- Status badges ---------- */
+.badge { display: inline-block; padding: 0.22rem 0.65rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600; }
+.badge-free { background: var(--success-tint); color: var(--success); }
+.badge-held { background: var(--brass-tint); color: #765320; }
+.badge-occupied { background: var(--info-tint); color: var(--info); }
+.badge-cleaning { background: var(--warn-tint); color: #6e5714; }
+.badge-ready { background: var(--success-tint); color: var(--success); }
+.badge-cancelled { background: #eee; color: #595959; }
+
+/* ---------- Banners ---------- */
+.banner { border-radius: var(--radius-s); padding: 0.95rem 1.1rem; margin-bottom: 1.25rem; font-size: 0.92rem; display: flex; gap: 0.7rem; }
+.banner-error { background: var(--error-tint); color: #6e241d; border: 1px solid #e3bdb6; }
+.banner-success { background: var(--success-tint); color: #254b34; border: 1px solid #bedac8; }
+.banner-icon { font-weight: 700; }
+.banner strong { display: block; margin-bottom: 0.15rem; }
+.banner .banner-action { margin-top: 0.5rem; }
+
+/* ---------- Tables (staff screens) ---------- */
+table.data { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+table.data th {
+  text-align: left; font-size: 0.78rem; text-transform: none;
+  color: var(--ink-soft); font-weight: 600;
+  padding: 0.55rem 0.7rem; border-bottom: 2px solid var(--border);
+}
+table.data td { padding: 0.75rem 0.7rem; border-bottom: 1px solid var(--border-soft); vertical-align: middle; }
+table.data tr:hover td { background: #faf9f5; }
+.row-actions { display: flex; gap: 0.5rem; }
+.mono { font-variant-numeric: tabular-nums; }
+
+/* ---------- Room result cards ---------- */
+.room-card {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.1rem 1.3rem; border: 1px solid var(--border); border-radius: var(--radius-m);
+  background: var(--surface); margin-bottom: 0.85rem;
+}
+.room-card .room-meta h3 { margin: 0 0 0.2rem; font-family: var(--serif); font-weight: 400; font-size: 1.15rem; }
+.room-card .room-meta p { margin: 0; color: var(--ink-soft); font-size: 0.88rem; }
+.room-card .room-price { text-align: right; }
+.room-card .room-price .amount { font-size: 1.15rem; font-weight: 600; color: var(--pine); }
+.room-card .room-price .per { color: var(--ink-soft); font-size: 0.78rem; display: block; }
+
+/* ---------- Empty & loading states ---------- */
+.empty-state { text-align: center; padding: 3.5rem 1.5rem; color: var(--ink-soft); }
+.empty-state .empty-icon { font-size: 2.2rem; margin-bottom: 0.75rem; }
+.empty-state h2 { font-family: var(--serif); font-weight: 400; color: var(--pine); margin: 0 0 0.5rem; }
+
+.loading-state { text-align: center; padding: 3.5rem 1.5rem; color: var(--ink-soft); }
+.spinner {
+  width: 34px; height: 34px; margin: 0 auto 1rem;
+  border: 3px solid var(--border);
+  border-top-color: var(--brass);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------- Summary box ---------- */
+.summary-box { background: var(--stone-bg); border-radius: var(--radius-m); padding: 1.1rem 1.3rem; }
+.summary-line { display: flex; justify-content: space-between; padding: 0.3rem 0; font-size: 0.92rem; }
+.summary-line.total { border-top: 1px solid var(--border); margin-top: 0.4rem; padding-top: 0.6rem; font-weight: 700; color: var(--pine); font-size: 1.02rem; }
+
+.skip-link {
+  position: absolute; left: -999px; top: 0; background: var(--pine); color: #fff;
+  padding: 0.6rem 1rem; z-index: 100;
+}
+.skip-link:focus { left: 1rem; top: 1rem; }
+
+.steps-indicator { display: flex; gap: 0.5rem; margin-bottom: 1.75rem; font-size: 0.82rem; color: var(--ink-soft); }
+.steps-indicator .step { padding-bottom: 0.4rem; border-bottom: 2px solid var(--border); }
+.steps-indicator .step.current { color: var(--pine); font-weight: 600; border-color: var(--brass); }
+
+@media (max-width: 640px) {
+  .page { padding: 1.25rem 1rem 2rem; }
+  .field-row { flex-direction: column; gap: 0; }
+  .topbar nav { display: none; }
+  .room-card { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+  .room-card .room-price { text-align: left; }
+}

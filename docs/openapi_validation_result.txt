@@ -1,0 +1,19 @@
+Результат перевірки OpenAPI-специфікації валідатором (@apidevtools/swagger-parser)
+===========================================================================
+Дата перевірки: 2026-10-14T10:29:56.975Z
+Статус: VALID — специфікація відповідає OpenAPI 3.1.1
+Кількість шляхів (paths): 12
+Кількість операцій: 12
+Перелік операцій:
+  GET /rooms/availability
+  GET /bookings
+  POST /bookings/draft
+  POST /payments
+  GET /bookings/mine
+  POST /bookings/{id}/cancel
+  POST /bookings/{id}/confirm
+  POST /bookings/{id}/reject
+  POST /bookings/{id}/check-in
+  POST /bookings/{id}/check-out
+  GET /rooms/cleaning-queue
+  POST /rooms/{id}/mark-cleaned

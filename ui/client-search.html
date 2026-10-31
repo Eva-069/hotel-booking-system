@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Пошук номерів — Система бронювання готелю</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Перейти до вмісту</a>
+<header class="topbar">
+  <div class="brand">Готель <span>«Либідь»</span></div>
+  <nav>
+    <a href="client-search.html" class="active">Пошук номерів</a>
+    <a href="client-my-bookings.html">Мої бронювання</a>
+  </nav>
+  <div class="role-chip">Клієнт</div>
+</header>
+
+<main id="main" class="page page--narrow">
+  <p class="eyebrow-free">Екран 1 · US-01 · стан: форма (за замовчуванням)</p>
+  <h1 class="page-title">Перевірити доступність номера</h1>
+  <p class="page-sub">Оберіть дати заїзду й виїзду та, за бажанням, категорію номера.</p>
+
+  <form class="panel" id="search-form" aria-labelledby="search-form-title" novalidate>
+    <h2 id="search-form-title" style="position:absolute;left:-9999px">Форма пошуку доступності</h2>
+    <div class="field-row">
+      <div class="field">
+        <label for="checkin">Дата заїзду</label>
+        <input type="date" id="checkin" name="checkin" value="2026-11-10" required>
+      </div>
+      <div class="field">
+        <label for="checkout">Дата виїзду</label>
+        <input type="date" id="checkout" name="checkout" value="2026-11-13" required>
+        <div class="hint" id="checkout-hint">Має бути пізнішою за дату заїзду (INV-01)</div>
+      </div>
+    </div>
+    <div class="field">
+      <label for="category">Категорія номера (необов'язково)</label>
+      <select id="category" name="category">
+        <option value="">Будь-яка</option>
+        <option value="standard">Стандарт</option>
+        <option value="comfort" selected>Комфорт</option>
+        <option value="lux">Люкс</option>
+      </select>
+    </div>
+    <div class="btn-row">
+      <button type="submit" class="btn-primary">Перевірити доступність</button>
+    </div>
+  </form>
+</main>
+<script src="app.js"></script>
+<script>
+  requireRole("client");
+  document.getElementById("search-form").addEventListener("submit", (ev) => {
+    ev.preventDefault();
+    const ci = document.getElementById("checkin").value;
+    const co = document.getElementById("checkout").value;
+    const cat = document.getElementById("category").value;
+    const field = document.getElementById("checkout").closest(".field");
+    field.querySelectorAll(".field-error").forEach((n) => n.remove());
+    field.classList.remove("has-error");
+    if (!ci || !co || co <= ci) {  // INV-01 на боці інтерфейсу; сервер перевіряє повторно (422)
+      field.classList.add("has-error");
+      field.insertAdjacentHTML("beforeend", '<div class="field-error" role="alert">Дата виїзду має бути пізнішою за дату заїзду.</div>');
+      return;
+    }
+    const q = new URLSearchParams({ checkIn: ci, checkOut: co });
+    if (cat) q.set("category", cat);
+    location.href = "client-search-results.html?" + q.toString();
+  });
+</script>
+</body>
+</html>

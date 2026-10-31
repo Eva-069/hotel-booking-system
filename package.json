@@ -1,0 +1,23 @@
+{
+  "name": "hotel-booking-system",
+  "version": "1.0.0",
+  "description": "Навчальний прототип інформаційної системи бронювання готелю (курсова робота, дисципліна «Проєктування інформаційних систем»)",
+  "main": "server/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server/index.js",
+    "seed": "node server/seed.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.10.0",
+    "cors": "^2.8.6",
+    "express": "^4.22.3",
+    "jsonwebtoken": "^9.0.3",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@apidevtools/swagger-parser": "^10.1.1",
+    "js-yaml": "^4.1.0"
+  }
+}

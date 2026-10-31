@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Доступні номери — Система бронювання готелю</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a href="#main" class="skip-link">Перейти до вмісту</a>
+<header class="topbar">
+  <div class="brand">Готель <span>«Либідь»</span></div>
+  <nav>
+    <a href="client-search.html" class="active">Пошук номерів</a>
+    <a href="client-my-bookings.html">Мої бронювання</a>
+  </nav>
+  <div class="role-chip">Клієнт</div>
+</header>
+
+<main id="main" class="page">
+  <p class="eyebrow-free">Екрани 2–3 · US-01 · стани: завантаження → успіх / порожньо / помилка</p>
+  <h1 class="page-title">Доступні номери</h1>
+  <p class="page-sub" id="summary"></p>
+  <div id="content"></div>
+</main>
+
+<script src="app.js"></script>
+<script>
+  requireRole("client");
+  const params = new URLSearchParams(location.search);
+  const checkIn = params.get("checkIn"), checkOut = params.get("checkOut"), category = params.get("category");
+  const content = document.getElementById("content");
+
+  function nights() { return Math.round((new Date(checkOut) - new Date(checkIn)) / 86400000); }
+
+  async function load() {
+    // Стан «завантаження» (екран 2)
+    content.innerHTML = `<div class="panel"><div class="loading-state" role="status" aria-live="polite">
+      <div class="spinner" aria-hidden="true"></div><p>Перевіряємо доступність номерів…</p></div></div>`;
+
+    const q = new URLSearchParams({ checkIn, checkOut });
+    if (category) q.set("category", category);
+    const res = await api("/rooms/availability?" + q.toString());
+
+    if (!res.ok) {
+      content.innerHTML = `<div class="banner banner-error" role="alert"><span class="banner-icon">!</span>
+        <div><strong>Не вдалося отримати перелік номерів</strong>${escapeHtml(res.data?.message || "Спробуйте пізніше")}</div></div>`;
+      return;
+    }
+    const rooms = res.data;
+    document.getElementById("summary").textContent =
+      `${fmtDate(checkIn)} – ${fmtDate(checkOut)} (${nights()} ноч.)` +
+      (category ? ` · Категорія: ${CATEGORY_UA[category]}` : "") +
+      ` · Знайдено номерів: ${rooms.length}`;
+
+    if (rooms.length === 0) {
+      content.innerHTML = `<div class="panel"><div class="empty-state"><div class="empty-icon">🗝</div>
+        <h2>Вільних номерів не знайдено</h2><p>Спробуйте змінити дати або категорію.</p>
+        <div class="btn-row" style="justify-content:center;"><a class="btn btn-primary" href="client-search.html">Змінити пошук</a></div></div></div>`;
+      return;
+    }
+    // Стан «успіх» (екран 3)
+    content.innerHTML = rooms.map((r) => `
+      <div class="room-card">
+        <div class="room-meta"><h3>Номер ${escapeHtml(r.number)} · ${CATEGORY_UA[r.category]}</h3>
+          <p>Категорія: ${CATEGORY_UA[r.category]}</p></div>
+        <div class="room-price"><span class="amount">${fmtMoney(r.basePrice)}</span><span class="per">за добу</span></div>
+        <a class="btn btn-primary" style="margin-left:1.5rem;"
+           href="client-booking-payment.html?roomId=${r.id}&number=${encodeURIComponent(r.number)}&category=${r.category}&price=${r.basePrice}&checkIn=${checkIn}&checkOut=${checkOut}">Обрати</a>
+      </div>`).join("");
+  }
+  load();
+</script>
+</body>
+</html>
