@@ -1,0 +1,389 @@
+{
+  "steps": [
+    {
+      "id": "0",
+      "variant": "вихідний стан",
+      "actor": "—",
+      "action": "Чиста база після npm run seed",
+      "state": "номери 204=free, 207=free; бронювання [№1:cancelled]; платежі [success=1]; записів у журналі 2"
+    },
+    {
+      "id": "1",
+      "variant": "коректний",
+      "actor": "Клієнт",
+      "action": "Перевіряє доступність номерів категорії «Комфорт» на 10–13.11.2026",
+      "request": "GET /rooms/availability?checkIn=2026-11-10&checkOut=2026-11-13&category=comfort",
+      "rule": "INV-01: виїзд пізніше заїзду; формат дат",
+      "status": 200,
+      "response": [
+        {
+          "id": 1,
+          "number": "204",
+          "category": "comfort",
+          "basePrice": 1450,
+          "status": "free"
+        },
+        {
+          "id": 2,
+          "number": "207",
+          "category": "comfort",
+          "basePrice": 1450,
+          "status": "free"
+        }
+      ],
+      "expected": 200,
+      "ok": true,
+      "state": "номери 204=free, 207=free; бронювання [№1:cancelled]; платежі [success=1]; записів у журналі 2"
+    },
+    {
+      "id": "2",
+      "variant": "коректний",
+      "actor": "Клієнт",
+      "action": "Створює чернетку: номер 204, послуги «Сніданок» і «Ранній заїзд»",
+      "request": "POST /bookings/draft",
+      "body": {
+        "roomId": 1,
+        "checkInDate": "2026-11-10",
+        "checkOutDate": "2026-11-13",
+        "serviceIds": [
+          1,
+          3
+        ]
+      },
+      "rule": "INV-01, INV-05: розрахунок суми 3 × 1450 + 450 + 350",
+      "status": 201,
+      "response": {
+        "draftId": "9daee126-4053-4018-9958-29f73b86af51",
+        "bookingId": 2,
+        "roomId": 1,
+        "checkInDate": "2026-11-10",
+        "checkOutDate": "2026-11-13",
+        "nights": 3,
+        "services": [
+          {
+            "serviceId": 1,
+            "name": "Сніданок (на весь період)",
+            "price": 450
+          },
+          {
+            "serviceId": 3,
+            "name": "Ранній заїзд / пізній виїзд",
+            "price": 350
+          }
+        ],
+        "totalPrice": 5150,
+        "currency": "UAH"
+      },
+      "expected": 201,
+      "ok": true,
+      "state": "номери 204=free, 207=free; бронювання [№1:cancelled, №2:draft]; платежі [success=1]; записів у журналі 2"
+    },
+    {
+      "id": "3",
+      "variant": "коректний",
+      "actor": "Клієнт",
+      "action": "Оплачує чернетку",
+      "request": "POST /payments",
+      "body": {
+        "draftId": "9daee126-4053-4018-9958-29f73b86af51",
+        "amount": 5150,
+        "currency": "UAH"
+      },
+      "rule": "INV-05: сума збігається; INV-02: немає перетину дат; INV-03: утримання лише після успішного платежу",
+      "status": 201,
+      "response": {
+        "id": 2,
+        "roomId": 1,
+        "checkInDate": "2026-11-10",
+        "checkOutDate": "2026-11-13",
+        "status": "paid",
+        "totalPrice": 5150,
+        "createdAt": "2026-10-31T12:45:33.175Z",
+        "checkedInAt": null,
+        "checkedOutAt": null
+      },
+      "expected": 201,
+      "ok": true,
+      "state": "номери 204=held, 207=free; бронювання [№1:cancelled, №2:paid]; платежі [success=2]; записів у журналі 3"
+    },
+    {
+      "id": "E1",
+      "variant": "помилковий",
+      "actor": "Клієнт",
+      "action": "Намагається створити чернетку на ті самі дати (11–12.11), номер уже утримано",
+      "request": "POST /bookings/draft",
+      "body": {
+        "roomId": 1,
+        "checkInDate": "2026-11-11",
+        "checkOutDate": "2026-11-12"
+      },
+      "rule": "INV-02: перетин дат з оплаченим бронюванням",
+      "status": 409,
+      "response": {
+        "code": "resource_unavailable",
+        "message": "Обраний номер вже заброньовано на ці дати"
+      },
+      "expected": 409,
+      "ok": true,
+      "state": "номери 204=held, 207=free; бронювання [№1:cancelled, №2:paid]; платежі [success=2]; записів у журналі 3"
+    },
+    {
+      "id": "E2",
+      "variant": "помилковий",
+      "actor": "Клієнт",
+      "action": "Надсилає чернетку зі зворотним порядком дат",
+      "request": "POST /bookings/draft",
+      "body": {
+        "roomId": 2,
+        "checkInDate": "2026-11-13",
+        "checkOutDate": "2026-11-10"
+      },
+      "rule": "INV-01: дата виїзду пізніша за дату заїзду",
+      "status": 422,
+      "response": {
+        "code": "invalid_date_range",
+        "message": "Дата виїзду має бути пізнішою за дату заїзду"
+      },
+      "expected": 422,
+      "ok": true,
+      "state": "номери 204=held, 207=free; бронювання [№1:cancelled, №2:paid]; платежі [success=2]; записів у журналі 3"
+    },
+    {
+      "id": "E3",
+      "variant": "помилковий",
+      "actor": "Клієнт",
+      "action": "Оплата чернетки на номер 207 відхилена платіжною системою (мок: simulate=decline)",
+      "request": "POST /payments",
+      "body": {
+        "draftId": "f5f2e061-792b-43bb-aa2c-724261a76ec7",
+        "amount": 2900,
+        "currency": "UAH",
+        "simulate": "decline"
+      },
+      "rule": "US-02, негативний критерій: бронювання не створюється, номер не утримується",
+      "status": 402,
+      "response": {
+        "code": "payment_declined",
+        "message": "Платіжна система відхилила оплату. Спробуйте ще раз."
+      },
+      "expected": 402,
+      "ok": true,
+      "state": "номери 204=held, 207=free; бронювання [№1:cancelled, №2:paid, №3:draft]; платежі [failed=1, success=2]; записів у журналі 3"
+    },
+    {
+      "id": "E4",
+      "variant": "помилковий",
+      "actor": "Адміністратор",
+      "action": "Намагається заселити клієнта до підтвердження бронювання",
+      "request": "POST /bookings/2/check-in",
+      "rule": "INV-06: заселення лише з підтвердженого бронювання",
+      "status": 409,
+      "response": {
+        "code": "invalid_status_transition",
+        "message": "Заселення можливе лише для підтвердженого бронювання"
+      },
+      "expected": 409,
+      "ok": true,
+      "state": "номери 204=held, 207=free; бронювання [№1:cancelled, №2:paid, №3:draft]; платежі [failed=1, success=2]; записів у журналі 3"
+    },
+    {
+      "id": "E5",
+      "variant": "помилковий",
+      "actor": "Клієнт",
+      "action": "Намагається підтвердити бронювання (дія адміністратора)",
+      "request": "POST /bookings/2/confirm",
+      "rule": "NFR-06, T-04: централізована перевірка ролі",
+      "status": 403,
+      "response": {
+        "code": "forbidden",
+        "message": "Дія доступна лише ролі: admin"
+      },
+      "expected": 403,
+      "ok": true,
+      "state": "номери 204=held, 207=free; бронювання [№1:cancelled, №2:paid, №3:draft]; платежі [failed=1, success=2]; записів у журналі 3"
+    },
+    {
+      "id": "4",
+      "variant": "коректний",
+      "actor": "Адміністратор",
+      "action": "Підтверджує оплачену заявку",
+      "request": "POST /bookings/2/confirm",
+      "rule": "INV-04: перехід paid → confirmed дозволений",
+      "status": 200,
+      "response": {
+        "id": 2,
+        "roomId": 1,
+        "checkInDate": "2026-11-10",
+        "checkOutDate": "2026-11-13",
+        "status": "confirmed",
+        "totalPrice": 5150,
+        "createdAt": "2026-10-31T12:45:33.175Z",
+        "checkedInAt": null,
+        "checkedOutAt": null
+      },
+      "expected": 200,
+      "ok": true,
+      "state": "номери 204=held, 207=free; бронювання [№1:cancelled, №2:confirmed, №3:draft]; платежі [failed=1, success=2]; записів у журналі 4"
+    },
+    {
+      "id": "5",
+      "variant": "коректний",
+      "actor": "Адміністратор",
+      "action": "Оформлює заселення",
+      "request": "POST /bookings/2/check-in",
+      "rule": "INV-06: статус confirmed",
+      "status": 200,
+      "response": {
+        "id": 2,
+        "roomId": 1,
+        "checkInDate": "2026-11-10",
+        "checkOutDate": "2026-11-13",
+        "status": "checked_in",
+        "totalPrice": 5150,
+        "createdAt": "2026-10-31T12:45:33.175Z",
+        "checkedInAt": "2026-10-31T12:45:33.512Z",
+        "checkedOutAt": null
+      },
+      "expected": 200,
+      "ok": true,
+      "state": "номери 204=occupied, 207=free; бронювання [№1:cancelled, №2:checked_in, №3:draft]; платежі [failed=1, success=2]; записів у журналі 5"
+    },
+    {
+      "id": "6",
+      "variant": "коректний",
+      "actor": "Адміністратор",
+      "action": "Оформлює виїзд",
+      "request": "POST /bookings/2/check-out",
+      "rule": "Перехід checked_in → checked_out; номер → needs_cleaning",
+      "status": 200,
+      "response": {
+        "id": 2,
+        "roomId": 1,
+        "checkInDate": "2026-11-10",
+        "checkOutDate": "2026-11-13",
+        "status": "checked_out",
+        "totalPrice": 5150,
+        "createdAt": "2026-10-31T12:45:33.175Z",
+        "checkedInAt": "2026-10-31T12:45:33.512Z",
+        "checkedOutAt": "2026-10-31T12:45:33.514Z"
+      },
+      "expected": 200,
+      "ok": true,
+      "state": "номери 204=needs_cleaning, 207=free; бронювання [№1:cancelled, №2:checked_out, №3:draft]; платежі [failed=1, success=2]; записів у журналі 6"
+    },
+    {
+      "id": "7",
+      "variant": "коректний",
+      "actor": "Персонал прибирання",
+      "action": "Переглядає чергу прибирання",
+      "request": "GET /rooms/cleaning-queue",
+      "rule": "NFR-02: у відповіді немає персональних даних клієнта",
+      "status": 200,
+      "response": [
+        {
+          "id": 1,
+          "number": "204",
+          "category": "comfort",
+          "basePrice": 1450,
+          "status": "needs_cleaning"
+        },
+        {
+          "id": 5,
+          "number": "115",
+          "category": "standard",
+          "basePrice": 950,
+          "status": "needs_cleaning"
+        }
+      ],
+      "expected": 200,
+      "ok": true,
+      "state": "номери 204=needs_cleaning, 207=free; бронювання [№1:cancelled, №2:checked_out, №3:draft]; платежі [failed=1, success=2]; записів у журналі 6"
+    },
+    {
+      "id": "8",
+      "variant": "коректний",
+      "actor": "Персонал прибирання",
+      "action": "Позначає номер 204 прибраним",
+      "request": "POST /rooms/1/mark-cleaned",
+      "rule": "INV-07: лише зі статусу needs_cleaning",
+      "status": 200,
+      "response": {
+        "id": 1,
+        "number": "204",
+        "category": "comfort",
+        "basePrice": 1450,
+        "status": "ready"
+      },
+      "expected": 200,
+      "ok": true,
+      "state": "номери 204=ready, 207=free; бронювання [№1:cancelled, №2:checked_out, №3:draft]; платежі [failed=1, success=2]; записів у журналі 7"
+    },
+    {
+      "id": "E6",
+      "variant": "помилковий",
+      "actor": "Персонал прибирання",
+      "action": "Повторно позначає той самий номер прибраним",
+      "request": "POST /rooms/1/mark-cleaned",
+      "rule": "INV-07: номер уже не потребує прибирання",
+      "status": 409,
+      "response": {
+        "code": "invalid_status_transition",
+        "message": "Позначити прибраним можна лише номер зі статусом «потребує прибирання»"
+      },
+      "expected": 409,
+      "ok": true,
+      "state": "номери 204=ready, 207=free; бронювання [№1:cancelled, №2:checked_out, №3:draft]; платежі [failed=1, success=2]; записів у журналі 7"
+    }
+  ],
+  "audit": [
+    {
+      "id": 1,
+      "actor_id": 1,
+      "action": "booking.pay",
+      "entity_type": "booking",
+      "entity_id": 1
+    },
+    {
+      "id": 2,
+      "actor_id": 1,
+      "action": "booking.cancel",
+      "entity_type": "booking",
+      "entity_id": 1
+    },
+    {
+      "id": 3,
+      "actor_id": 1,
+      "action": "booking.pay",
+      "entity_type": "booking",
+      "entity_id": 2
+    },
+    {
+      "id": 4,
+      "actor_id": 2,
+      "action": "booking.confirm",
+      "entity_type": "booking",
+      "entity_id": 2
+    },
+    {
+      "id": 5,
+      "actor_id": 2,
+      "action": "booking.check_in",
+      "entity_type": "booking",
+      "entity_id": 2
+    },
+    {
+      "id": 6,
+      "actor_id": 2,
+      "action": "booking.check_out",
+      "entity_type": "booking",
+      "entity_id": 2
+    },
+    {
+      "id": 7,
+      "actor_id": 3,
+      "action": "room.mark_cleaned",
+      "entity_type": "room",
+      "entity_id": 1
+    }
+  ]
+}

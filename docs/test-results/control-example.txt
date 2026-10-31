@@ -1,0 +1,90 @@
+Крок 0 [вихідний стан]: Чиста база після npm run seed
+  Стан:    номери 204=free, 207=free; бронювання [№1:cancelled]; платежі [success=1]; записів у журналі 2
+
+Крок 1 [коректний] Клієнт: Перевіряє доступність номерів категорії «Комфорт» на 10–13.11.2026
+  Запит:   GET /rooms/availability?checkIn=2026-11-10&checkOut=2026-11-13&category=comfort
+  Правило: INV-01: виїзд пізніше заїзду; формат дат
+  Відповідь: HTTP 200 (очікувано 200) [{"id":1,"number":"204","category":"comfort","basePrice":1450,"status":"free"},{"id":2,"number":"207","category":"comfort","basePrice":1450,"status":"free"}]
+  Стан:    номери 204=free, 207=free; бронювання [№1:cancelled]; платежі [success=1]; записів у журналі 2
+
+Крок 2 [коректний] Клієнт: Створює чернетку: номер 204, послуги «Сніданок» і «Ранній заїзд»
+  Запит:   POST /bookings/draft  {"roomId":1,"checkInDate":"2026-11-10","checkOutDate":"2026-11-13","serviceIds":[1,3]}
+  Правило: INV-01, INV-05: розрахунок суми 3 × 1450 + 450 + 350
+  Відповідь: HTTP 201 (очікувано 201) {"draftId":"9daee126-4053-4018-9958-29f73b86af51","bookingId":2,"roomId":1,"checkInDate":"2026-11-10","checkOutDate":"2026-11-13","nights":3,"services":[{"serviceId":1,"name":"Сніданок (на весь період)","price":450},{"serviceId":3,"name":"Ранній заїзд / пізній
+  Стан:    номери 204=free, 207=free; бронювання [№1:cancelled, №2:draft]; платежі [success=1]; записів у журналі 2
+
+Крок 3 [коректний] Клієнт: Оплачує чернетку
+  Запит:   POST /payments  {"draftId":"9daee126-4053-4018-9958-29f73b86af51","amount":5150,"currency":"UAH"}
+  Правило: INV-05: сума збігається; INV-02: немає перетину дат; INV-03: утримання лише після успішного платежу
+  Відповідь: HTTP 201 (очікувано 201) {"id":2,"roomId":1,"checkInDate":"2026-11-10","checkOutDate":"2026-11-13","status":"paid","totalPrice":5150,"createdAt":"2026-10-31T12:45:33.175Z","checkedInAt":null,"checkedOutAt":null}
+  Стан:    номери 204=held, 207=free; бронювання [№1:cancelled, №2:paid]; платежі [success=2]; записів у журналі 3
+
+Крок E1 [помилковий] Клієнт: Намагається створити чернетку на ті самі дати (11–12.11), номер уже утримано
+  Запит:   POST /bookings/draft  {"roomId":1,"checkInDate":"2026-11-11","checkOutDate":"2026-11-12"}
+  Правило: INV-02: перетин дат з оплаченим бронюванням
+  Відповідь: HTTP 409 (очікувано 409) {"code":"resource_unavailable","message":"Обраний номер вже заброньовано на ці дати"}
+  Стан:    номери 204=held, 207=free; бронювання [№1:cancelled, №2:paid]; платежі [success=2]; записів у журналі 3
+
+Крок E2 [помилковий] Клієнт: Надсилає чернетку зі зворотним порядком дат
+  Запит:   POST /bookings/draft  {"roomId":2,"checkInDate":"2026-11-13","checkOutDate":"2026-11-10"}
+  Правило: INV-01: дата виїзду пізніша за дату заїзду
+  Відповідь: HTTP 422 (очікувано 422) {"code":"invalid_date_range","message":"Дата виїзду має бути пізнішою за дату заїзду"}
+  Стан:    номери 204=held, 207=free; бронювання [№1:cancelled, №2:paid]; платежі [success=2]; записів у журналі 3
+
+Крок E3 [помилковий] Клієнт: Оплата чернетки на номер 207 відхилена платіжною системою (мок: simulate=decline)
+  Запит:   POST /payments  {"draftId":"f5f2e061-792b-43bb-aa2c-724261a76ec7","amount":2900,"currency":"UAH","simulate":"decline"}
+  Правило: US-02, негативний критерій: бронювання не створюється, номер не утримується
+  Відповідь: HTTP 402 (очікувано 402) {"code":"payment_declined","message":"Платіжна система відхилила оплату. Спробуйте ще раз."}
+  Стан:    номери 204=held, 207=free; бронювання [№1:cancelled, №2:paid, №3:draft]; платежі [failed=1, success=2]; записів у журналі 3
+
+Крок E4 [помилковий] Адміністратор: Намагається заселити клієнта до підтвердження бронювання
+  Запит:   POST /bookings/2/check-in
+  Правило: INV-06: заселення лише з підтвердженого бронювання
+  Відповідь: HTTP 409 (очікувано 409) {"code":"invalid_status_transition","message":"Заселення можливе лише для підтвердженого бронювання"}
+  Стан:    номери 204=held, 207=free; бронювання [№1:cancelled, №2:paid, №3:draft]; платежі [failed=1, success=2]; записів у журналі 3
+
+Крок E5 [помилковий] Клієнт: Намагається підтвердити бронювання (дія адміністратора)
+  Запит:   POST /bookings/2/confirm
+  Правило: NFR-06, T-04: централізована перевірка ролі
+  Відповідь: HTTP 403 (очікувано 403) {"code":"forbidden","message":"Дія доступна лише ролі: admin"}
+  Стан:    номери 204=held, 207=free; бронювання [№1:cancelled, №2:paid, №3:draft]; платежі [failed=1, success=2]; записів у журналі 3
+
+Крок 4 [коректний] Адміністратор: Підтверджує оплачену заявку
+  Запит:   POST /bookings/2/confirm
+  Правило: INV-04: перехід paid → confirmed дозволений
+  Відповідь: HTTP 200 (очікувано 200) {"id":2,"roomId":1,"checkInDate":"2026-11-10","checkOutDate":"2026-11-13","status":"confirmed","totalPrice":5150,"createdAt":"2026-10-31T12:45:33.175Z","checkedInAt":null,"checkedOutAt":null}
+  Стан:    номери 204=held, 207=free; бронювання [№1:cancelled, №2:confirmed, №3:draft]; платежі [failed=1, success=2]; записів у журналі 4
+
+Крок 5 [коректний] Адміністратор: Оформлює заселення
+  Запит:   POST /bookings/2/check-in
+  Правило: INV-06: статус confirmed
+  Відповідь: HTTP 200 (очікувано 200) {"id":2,"roomId":1,"checkInDate":"2026-11-10","checkOutDate":"2026-11-13","status":"checked_in","totalPrice":5150,"createdAt":"2026-10-31T12:45:33.175Z","checkedInAt":"2026-10-31T12:45:33.512Z","checkedOutAt":null}
+  Стан:    номери 204=occupied, 207=free; бронювання [№1:cancelled, №2:checked_in, №3:draft]; платежі [failed=1, success=2]; записів у журналі 5
+
+Крок 6 [коректний] Адміністратор: Оформлює виїзд
+  Запит:   POST /bookings/2/check-out
+  Правило: Перехід checked_in → checked_out; номер → needs_cleaning
+  Відповідь: HTTP 200 (очікувано 200) {"id":2,"roomId":1,"checkInDate":"2026-11-10","checkOutDate":"2026-11-13","status":"checked_out","totalPrice":5150,"createdAt":"2026-10-31T12:45:33.175Z","checkedInAt":"2026-10-31T12:45:33.512Z","checkedOutAt":"2026-10-31T12:45:33.514Z"}
+  Стан:    номери 204=needs_cleaning, 207=free; бронювання [№1:cancelled, №2:checked_out, №3:draft]; платежі [failed=1, success=2]; записів у журналі 6
+
+Крок 7 [коректний] Персонал прибирання: Переглядає чергу прибирання
+  Запит:   GET /rooms/cleaning-queue
+  Правило: NFR-02: у відповіді немає персональних даних клієнта
+  Відповідь: HTTP 200 (очікувано 200) [{"id":1,"number":"204","category":"comfort","basePrice":1450,"status":"needs_cleaning"},{"id":5,"number":"115","category":"standard","basePrice":950,"status":"needs_cleaning"}]
+  Стан:    номери 204=needs_cleaning, 207=free; бронювання [№1:cancelled, №2:checked_out, №3:draft]; платежі [failed=1, success=2]; записів у журналі 6
+
+Крок 8 [коректний] Персонал прибирання: Позначає номер 204 прибраним
+  Запит:   POST /rooms/1/mark-cleaned
+  Правило: INV-07: лише зі статусу needs_cleaning
+  Відповідь: HTTP 200 (очікувано 200) {"id":1,"number":"204","category":"comfort","basePrice":1450,"status":"ready"}
+  Стан:    номери 204=ready, 207=free; бронювання [№1:cancelled, №2:checked_out, №3:draft]; платежі [failed=1, success=2]; записів у журналі 7
+
+Крок E6 [помилковий] Персонал прибирання: Повторно позначає той самий номер прибраним
+  Запит:   POST /rooms/1/mark-cleaned
+  Правило: INV-07: номер уже не потребує прибирання
+  Відповідь: HTTP 409 (очікувано 409) {"code":"invalid_status_transition","message":"Позначити прибраним можна лише номер зі статусом «потребує прибирання»"}
+  Стан:    номери 204=ready, 207=free; бронювання [№1:cancelled, №2:checked_out, №3:draft]; платежі [failed=1, success=2]; записів у журналі 7
+
+Журнал дій (audit_log): booking.pay(актор 1), booking.cancel(актор 1), booking.pay(актор 1), booking.confirm(актор 2), booking.check_in(актор 2), booking.check_out(актор 2), room.mark_cleaned(актор 3)
+
+Підсумок: кроків 14, збігається з очікуваним 14, розбіжностей 0

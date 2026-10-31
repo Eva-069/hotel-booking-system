@@ -1,0 +1,78 @@
+# Subtest: TEST-08 · US-01 (+): доступність за датами та категорією
+# Subtest: TEST-09 · US-01/US-02 (−): порожні, некоректні та зловмисні значення → 422 (T-03)
+# Subtest: TEST-10 · US-02 (+): чернетка → оплата → бронювання створено, номер утримано
+# Subtest: TEST-11 · US-02 (−): оплату відхилено → 402, бронювання не створено; повтор успішний
+# Subtest: TEST-12 · US-02, повторний запит (T-05): ідемпотентність оплати за draftId
+# Subtest: TEST-13 · US-02 (−): недоступний номер, неіснуючі номер/послуга
+# Subtest: TEST-14 · US-03: «мої бронювання» — лише власні, без чернеток
+# Subtest: TEST-15 · US-04: скасування звільняє номер; чужий запис, повтор і пізній стан — відмова
+# Subtest: TEST-16 · US-05: підтвердження й відхилення заявки адміністратором
+# Subtest: TEST-17 · US-06: заселення фіксує статус, час і стан номера
+# Subtest: TEST-18 · US-07: виїзд переводить номер у «потребує прибирання»
+# Subtest: TEST-19 · US-08, NFR-02: черга прибирання без персональних даних; прибирання зменшує чергу
+# Subtest: TEST-22 · межі дат: суміжні періоди дозволені, перетин на одну ніч — ні
+# Subtest: TEST-25 · US-05…US-07: перелік бронювань адміністратора (з даними, без чернеток, без зайвих персональних даних)
+# Subtest: TEST-26 · T-03: некоректний JSON у тілі запиту → 422 з єдиною структурою помилки, а не 500
+# Error: SQLITE_CONSTRAINT: таємні подробиці /srv/app/server/db.js
+#     at svc.createDraft (/home/claude/hotel-booking-system/tests/functional.test.js:324:35)
+#     at /home/claude/hotel-booking-system/server/routes/bookings.js:23:34
+#     at Layer.handle [as handle_request] (/home/claude/hotel-booking-system/node_modules/express/lib/router/layer.js:95:5)
+#     at next (/home/claude/hotel-booking-system/node_modules/express/lib/router/route.js:149:13)
+#     at /home/claude/hotel-booking-system/server/middleware/auth.js:35:5
+#     at Layer.handle [as handle_request] (/home/claude/hotel-booking-system/node_modules/express/lib/router/layer.js:95:5)
+#     at next (/home/claude/hotel-booking-system/node_modules/express/lib/router/route.js:149:13)
+#     at requireAuth (/home/claude/hotel-booking-system/server/middleware/auth.js:20:5)
+#     at Layer.handle [as handle_request] (/home/claude/hotel-booking-system/node_modules/express/lib/router/layer.js:95:5)
+#     at next (/home/claude/hotel-booking-system/node_modules/express/lib/router/route.js:149:13)
+# Subtest: TEST-27 · повідомлення про помилки зрозумілі користувачеві (українською) і не розкривають внутрішніх деталей
+# Subtest: TEST-01 · INV-01: дата виїзду пізніша за дату заїзду (API + обмеження БД)
+# Subtest: TEST-02 · INV-02: паралельні оплати одного номера — один успіх, решта 409
+# Subtest: TEST-03 · INV-03: статус held лише після успішного платежу
+# Subtest: TEST-04 · INV-04: скасоване або відхилене бронювання не можна заселити
+# Subtest: TEST-05 · INV-05: total_price = ночі × ціна + послуги; неузгоджена сума відхиляється
+# Subtest: TEST-06 · INV-06: заселення лише з підтвердженого бронювання
+# Subtest: TEST-07 · INV-07: «прибрано» лише для номера зі статусом needs_cleaning
+# Subtest: TEST-20 · NFR-06, T-04: матриця ролей із x-roles контракту застосовується до кожної операції
+# Subtest: TEST-21 · NFR-07: кожна зміна стану фіксується в журналі дій без персональних даних
+# Subtest: TEST-23 · NFR-04: час відповіді GET /rooms/availability (24 номери, 200 бронювань)
+# NFR-04 середовище: Node v22.23.4, linux x64, CPU Intel(R) Xeon(R) Processor @ 2.80GHz ×2; SQLite-файл, localhost, послідовні запити
+# NFR-04 дані: 24 номери, 200 бронювань; запитів: 300
+# NFR-04 результат, мс: медіана=2.78; p95=4.80; максимум=16.00
+# Subtest: TEST-24 · NFR-05: контракт OpenAPI валідний і всі операції реалізовано з документованими кодами
+# tests 27
+# suites 0
+# pass 27
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 9014.798265
+# start of coverage report
+# -----------------------------------------------------------------------
+# file                   | line % | branch % | funcs % | uncovered lines
+# -----------------------------------------------------------------------
+# server                 |        |          |         | 
+#  app.js                |  94.87 |    75.00 |   50.00 | 35-36
+#  db.js                 | 100.00 |    50.00 |  100.00 | 
+#  errors.js             | 100.00 |    85.71 |  100.00 | 
+#  middleware            |        |          |         | 
+#   auth.js              | 100.00 |   100.00 |  100.00 | 
+#  routes                |        |          |         | 
+#   auth.js              | 100.00 |    75.00 |  100.00 | 
+#   bookings.js          | 100.00 |    96.67 |  100.00 | 
+#   payments.js          | 100.00 |    94.12 |  100.00 | 
+#   rooms.js             | 100.00 |   100.00 |  100.00 | 
+#  seed.js               |  94.00 |    60.00 |  100.00 | 43-45
+#  services              |        |          |         | 
+#   bookingService.js    |  99.05 |    95.45 |  100.00 | 183-184
+#   paymentService.js    | 100.00 |   100.00 |  100.00 | 
+#  validation.js         | 100.00 |   100.00 |  100.00 | 
+# tests                  |        |          |         | 
+#  functional.test.js    | 100.00 |   100.00 |  100.00 | 
+#  helpers.js            | 100.00 |    76.92 |  100.00 | 
+#  invariants.test.js    | 100.00 |   100.00 |  100.00 | 
+#  security-nfr.test.js  | 100.00 |   100.00 |  100.00 | 
+# -----------------------------------------------------------------------
+# all files              |  99.52 |    94.63 |   98.67 | 
+# -----------------------------------------------------------------------
+# end of coverage report

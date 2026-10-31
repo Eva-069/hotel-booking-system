@@ -1,0 +1,284 @@
+{
+  "label": "after",
+  "keyboard": [
+    {
+      "step": "1. Вхід: Tab до полів і кнопки, надсилання клавішею Enter",
+      "ok": true,
+      "note": "/client-search.html"
+    },
+    {
+      "step": "2. Пошук: вибір категорії стрілкою («lux»), надсилання Enter",
+      "ok": true,
+      "note": "/client-search-results.html?checkIn=2026-11-10&checkOut=2026-11-13&category=lux"
+    },
+    {
+      "step": "3. Вибір номера: Tab до кнопки «Обрати», активація Enter",
+      "ok": true,
+      "note": "/client-booking-payment.html?roomId=3&number=301&category=lu"
+    },
+    {
+      "step": "4. Послуга обрана клавішею Пробіл, номер картки введено з клавіатури",
+      "ok": true,
+      "note": "До оплати4 950 ₴"
+    },
+    {
+      "step": "5. Оплата кнопкою через Enter → екран підтвердження",
+      "ok": true,
+      "note": "Бронювання № 1 очікує підтвердження адміністратора."
+    },
+    {
+      "step": "6. Повідомлення про успіх має role=\"status\"",
+      "ok": true,
+      "note": "role=status"
+    },
+    {
+      "step": "7. Скасування бронювання клавіатурою (Tab → Enter, підтвердження діалогу)",
+      "ok": true,
+      "note": "Скасовано"
+    },
+    {
+      "step": "8. Усі зупинки фокусу мають видимий індикатор",
+      "ok": true,
+      "note": "перевірено зупинок фокусу: 41"
+    }
+  ],
+  "names": [
+    {
+      "page": "login.html",
+      "controls": 5,
+      "unnamed": []
+    },
+    {
+      "page": "client-search.html",
+      "controls": 8,
+      "unnamed": []
+    },
+    {
+      "page": "client-search-results.html",
+      "controls": 9,
+      "unnamed": []
+    },
+    {
+      "page": "client-booking-payment.html",
+      "controls": 13,
+      "unnamed": []
+    },
+    {
+      "page": "client-booking-success.html",
+      "controls": 5,
+      "unnamed": []
+    },
+    {
+      "page": "client-my-bookings.html",
+      "controls": 4,
+      "unnamed": []
+    },
+    {
+      "page": "admin-dashboard.html",
+      "controls": 4,
+      "unnamed": []
+    },
+    {
+      "page": "cleaning-queue.html",
+      "controls": 4,
+      "unnamed": []
+    }
+  ],
+  "structure": [
+    {
+      "page": "login.html",
+      "lang": "uk",
+      "title": true,
+      "h1": 1,
+      "main": 1,
+      "skipLink": true
+    },
+    {
+      "page": "client-search.html",
+      "lang": "uk",
+      "title": true,
+      "h1": 1,
+      "main": 1,
+      "skipLink": true
+    },
+    {
+      "page": "client-search-results.html",
+      "lang": "uk",
+      "title": true,
+      "h1": 1,
+      "main": 1,
+      "skipLink": true
+    },
+    {
+      "page": "client-booking-payment.html",
+      "lang": "uk",
+      "title": true,
+      "h1": 1,
+      "main": 1,
+      "skipLink": true
+    },
+    {
+      "page": "client-booking-success.html",
+      "lang": "uk",
+      "title": true,
+      "h1": 1,
+      "main": 1,
+      "skipLink": true
+    },
+    {
+      "page": "client-my-bookings.html",
+      "lang": "uk",
+      "title": true,
+      "h1": 1,
+      "main": 1,
+      "skipLink": true
+    },
+    {
+      "page": "admin-dashboard.html",
+      "lang": "uk",
+      "title": true,
+      "h1": 1,
+      "main": 1,
+      "skipLink": true
+    },
+    {
+      "page": "cleaning-queue.html",
+      "lang": "uk",
+      "title": true,
+      "h1": 1,
+      "main": 1,
+      "skipLink": true
+    }
+  ],
+  "responsive": [
+    {
+      "page": "login.html",
+      "width": 360,
+      "ok": true,
+      "pageScroll": false,
+      "scrollWidth": 360,
+      "clipped": []
+    },
+    {
+      "page": "client-search.html",
+      "width": 360,
+      "ok": true,
+      "pageScroll": false,
+      "scrollWidth": 360,
+      "clipped": []
+    },
+    {
+      "page": "client-search-results.html",
+      "width": 360,
+      "ok": true,
+      "pageScroll": false,
+      "scrollWidth": 360,
+      "clipped": []
+    },
+    {
+      "page": "client-booking-payment.html",
+      "width": 360,
+      "ok": true,
+      "pageScroll": false,
+      "scrollWidth": 360,
+      "clipped": []
+    },
+    {
+      "page": "client-booking-success.html",
+      "width": 360,
+      "ok": true,
+      "pageScroll": false,
+      "scrollWidth": 360,
+      "clipped": []
+    },
+    {
+      "page": "client-my-bookings.html",
+      "width": 360,
+      "ok": true,
+      "pageScroll": false,
+      "scrollWidth": 360,
+      "clipped": []
+    },
+    {
+      "page": "admin-dashboard.html",
+      "width": 360,
+      "ok": true,
+      "pageScroll": false,
+      "scrollWidth": 360,
+      "clipped": []
+    },
+    {
+      "page": "cleaning-queue.html",
+      "width": 360,
+      "ok": true,
+      "pageScroll": false,
+      "scrollWidth": 360,
+      "clipped": []
+    },
+    {
+      "page": "login.html",
+      "width": 1280,
+      "ok": true,
+      "pageScroll": false,
+      "scrollWidth": 1280,
+      "clipped": []
+    },
+    {
+      "page": "client-search.html",
+      "width": 1280,
+      "ok": true,
+      "pageScroll": false,
+      "scrollWidth": 1280,
+      "clipped": []
+    },
+    {
+      "page": "client-search-results.html",
+      "width": 1280,
+      "ok": true,
+      "pageScroll": false,
+      "scrollWidth": 1280,
+      "clipped": []
+    },
+    {
+      "page": "client-booking-payment.html",
+      "width": 1280,
+      "ok": true,
+      "pageScroll": false,
+      "scrollWidth": 1280,
+      "clipped": []
+    },
+    {
+      "page": "client-booking-success.html",
+      "width": 1280,
+      "ok": true,
+      "pageScroll": false,
+      "scrollWidth": 1280,
+      "clipped": []
+    },
+    {
+      "page": "client-my-bookings.html",
+      "width": 1280,
+      "ok": true,
+      "pageScroll": false,
+      "scrollWidth": 1280,
+      "clipped": []
+    },
+    {
+      "page": "admin-dashboard.html",
+      "width": 1280,
+      "ok": true,
+      "pageScroll": false,
+      "scrollWidth": 1280,
+      "clipped": []
+    },
+    {
+      "page": "cleaning-queue.html",
+      "width": 1280,
+      "ok": true,
+      "pageScroll": false,
+      "scrollWidth": 1280,
+      "clipped": []
+    }
+  ],
+  "keyboardTabs": 41
+}
